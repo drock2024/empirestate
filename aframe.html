@@ -1,0 +1,56 @@
+tml>
+  <head>
+    <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
+    <script>
+      AFRAME.registerComponent('change-color-and-sky-on-hover', {
+        schema: {
+          color: {default: 'red'},
+          skySrc: {default: '#sky'}
+        },
+    
+        init: function () {
+          var data = this.data;
+          var el = this.el;  // <a-box>
+          var defaultColor = el.getAttribute('material').color;
+          var sky = document.querySelector('a-sky');
+    
+          el.addEventListener('mouseenter', function () {
+            el.setAttribute('color', data.color);
+            sky.setAttribute('src', data.skySrc);
+          });
+    
+          el.addEventListener('mouseleave', function () {
+            el.setAttribute('color', defaultColor);
+            sky.setAttribute('src', '#sky');
+          });
+        }
+      });
+    </script>
+  </head>
+  <body>
+    <a-scene>
+      <!--Assets-->
+      <a-assets>
+        <img id="sky" src="Images/daybox-transformed.jpeg">
+        <img id="nightsky" src="Images/nightbox.png">
+        <a-asset-item id="empire" src="Images/newempirestate.gltf"></a-asset-item>
+      </a-assets>
+      <!--Camera and cursor-->
+      <a-camera position="-1 1 1">
+        <a-cursor></a-cursor>
+        <!-- Or <a-entity cursor></a-entity> -->
+      </a-camera>
+      <!--Ambient lighting-->
+      <a-entity light="type: ambient; color: #BBB"></a-entity>
+      <!--Point Light-->
+      <a-entity light="type: point; intensity: 3" position="-1 4 -2" animation="property: light.color; from:rgb(200, 70, 30); to:rgb(0, 30, 180); dur: 1500; loop:true; easings: easeInOutSine; dir: alternate; autoplay: true"></a-entity>
+      <a-sphere position="0 2 -2" scale="0.2 0.2 0.2" change-color-and-sky-on-hover="color: yellow; skySrc: #nightsky"></a-sphere>
+      <a-plane position="-2 0 -2" rotation="-90 0 0" width="20" height="10" color="#140507"></a-plane>
+      <a-sky src="#sky"></a-sky>
+      <!--Empire state model-->
+      <a-entity gltf-model="#empire" position="-1 1 -2" scale="0.05 0.05 0.05"></a-entity>
+      <!--Text-->
+      <a-entity text="value: Empire; align: center; color: red; font: dejavu" position="-1 0.5 -1" scale="10 10 10"></a-entity>
+    </a-scene>
+  </body>
+</html>
